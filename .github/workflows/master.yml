@@ -21,10 +21,11 @@ jobs:
       uses: actions/checkout@v4
 
     - name: archive to tar.gz
-      # kafka-producer 디렉토리 안의 모든 파일 + appspec.yml 포함하여 압축 루트에 위치시키도록 설정
       run: |
         cd kafka-producer
-        tar czf ../kafka-producer.tar.gz .
+        # appspec.yml + producers 디렉토리 전부 포함
+        tar czf ../kafka-producer.tar.gz appspec.yml producers
+    
 
     - name: AWS configure credentials
       # aws 접속시 필요한 키 셋팅하는 사전 정의된 action 사용
