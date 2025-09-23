@@ -17,11 +17,12 @@ jobs:
     steps:
     - name: checkout release
       # uses: 이미 만들어진 action을 사용할 때 사용
-      # actions/checkout@4는 본 레파지토리의 내용을 checkout 하여 runner 서버에 저장함
+      # actions/checkout@v4는 본 레파지토리의 내용을 checkout 하여 runner 서버에 저장함
       uses: actions/checkout@v4
 
     - name: archive to tar.gz
-      run: tar cvfz ./kafka-producer.tar.gz *
+      # ./kafka-producer 디렉토리 안의 파일들을 압축 루트에 위치시키도록 설정
+      run: tar czf kafka-producer.tar.gz -C ./kafka-producer .
 
     - name: AWS configure credentials
       # aws 접속시 필요한 키 셋팅하는 사전 정의된 action 사용
@@ -35,7 +36,7 @@ jobs:
       run: aws s3 cp --region ap-northeast-2 ./kafka-producer.tar.gz s3://datalake-actions-deploy-nayun/kafka-producer/kafka-producer.tar.gz
 
     - name: deploy with AWS codeDeploy
-      run: aws deploy create-deployment
-        --application-name datalake-deploy
-        --deployment-group-name kafka-deploy
+      run: aws deploy create-deployment \
+        --application-name datalake-deploy \
+        --deployment-group-name kafka-deploy \
         --s3-location bucket=datalake-actions-deploy-nayun,bundleType=tgz,key=kafka-producer/kafka-producer.tar.gz
