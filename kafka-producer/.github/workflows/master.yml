@@ -16,7 +16,7 @@ jobs:
 
     # 2️⃣ 프로젝트 압축 (tar.gz)
     - name: Archive project to tar.gz
-      run: tar cvfz kafka-producer.tar.gz ./*
+      run: tar cvfz ./kafka-producer.tar.gz -C ./ .
 
     # 3️⃣ AWS 자격증명 설정 (최신 버전)
     - name: Configure AWS credentials
