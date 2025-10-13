@@ -17,21 +17,21 @@ permissions:
 
 hooks:
   BeforeInstall:
-    - location: deploy/before_install.sh
+    - location: kafka-producer/deploy/before_install.sh
       timeout: 60
       runas: ubuntu
 
   AfterInstall:
-    - location: deploy/after_install.sh
+    - location: kafka-producer/deploy/after_install.sh
       timeout: 300
       runas: ubuntu
 
   ApplicationStart:
-    - location: deploy/application_start.sh
+    - location: kafka-producer/deploy/application_start.sh
       timeout: 300
       runas: ubuntu
 
   ValidateService:
-    - location: deploy/validate.sh
+    - location: kafka-producer/deploy/validate.sh
       timeout: 60
       runas: ubuntu
