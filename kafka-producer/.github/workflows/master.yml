@@ -10,31 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ 코드 체크아웃
-    - name: Checkout repository
+    - name: checkout release
       uses: actions/checkout@v4
 
-    # 2️⃣ 프로젝트 압축 (tar.gz)
-    - name: Archive project to tar.gz
-      run: tar cvfz ./kafka-producer.tar.gz -C ./ .
+    # ✅ kafka-producer 폴더 안으로 들어가서 압축
+    - name: archive to tar.gz
+      run: |
+        cd kafka-producer
+        tar cvfz ../kafka-producer.tar.gz ./*
 
-    # 3️⃣ AWS 자격증명 설정 (최신 버전)
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+    - name: AWS configure credentials
+      uses: aws-actions/configure-aws-credentials@v4  # ✅ 최신 버전 (v1 → v4)
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
         aws-region: ap-northeast-2
 
-    # 4️⃣ S3로 아카이브 업로드
-    - name: Upload artifact to S3
+    # ✅ 압축 결과 파일은 kafka-producer 폴더 밖 (repo 루트)에 생기므로 그대로 S3 업로드 가능
+    - name: upload to S3
       run: |
-        aws s3 cp kafka-producer.tar.gz \
+        aws s3 cp \
+          ./kafka-producer.tar.gz \
           s3://datalake-actions-deploy-nayun/kafka-producer/kafka-producer.tar.gz \
           --region ap-northeast-2
 
-    # 5️⃣ CodeDeploy를 이용해 배포 실행
-    - name: Create CodeDeploy deployment
+    - name: deploy with AWS CodeDeploy
       run: |
         aws deploy create-deployment \
           --application-name datalake-deploy \
