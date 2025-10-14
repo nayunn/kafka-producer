@@ -1,5 +1,4 @@
 name: deploy to kafka broker
-
 on:
   push:
     branches: [ master ]
@@ -9,33 +8,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout release
-        uses: actions/checkout@v4
+    - name: checkout release
+      uses: actions/checkout@v4
 
-      - name: archive to tar.gz
-        run: |
-          cd kafka-producer
-          tar -czf ../kafka-producer.tar.gz .
-          tar -tzf ../kafka-producer.tar.gz | head -20
+    - name: archive to tar.gz
+      run: |
+        cd kafka-producer       # ✅ kafka-producer 안으로 들어감
+        tar -czf ../kafka-producer.tar.gz .   # ✅ 내부 파일만 압축 (겉폴더 제거)
 
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
-          aws-region: ap-northeast-2
+    - name: AWS configure credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+        aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+        aws-region: ap-northeast-2
 
-      - name: upload to S3
-        run: |
-          aws s3 cp ../kafka-producer.tar.gz \
-            s3://datalake-actions-deploy-nayun/kafka-producer/kafka-producer.tar.gz \
-            --region ap-northeast-2
+    - name: upload to S3
+      run: |
+        aws s3 cp --region ap-northeast-2 ../kafka-producer.tar.gz \
+        s3://datalake-actions-deploy-nayun/kafka-producer/kafka-producer.tar.gz
 
-      - name: deploy with AWS CodeDeploy
-        run: |
-          aws deploy create-deployment \
-            --application-name datalake-deploy \
-            --deployment-group-name kafka-deploy \
-            --s3-location bucket=datalake-actions-deploy-nayun,bundleType=tgz,key=kafka-producer/kafka-producer.tar.gz \
-            --region ap-northeast-2
-###
+    - name: deploy with AWS codeDeploy
+      run: |
+        aws deploy create-deployment \
+        --application-name datalake-deploy \
+        --deployment-group-name kafka-deploy \
+        --s3-location bucket=datalake-actions-deploy-nayun,bundleType=tgz,key=kafka-producer/kafka-producer.tar.gz \
+        --region ap-northeast-2
