@@ -10,12 +10,18 @@ jobs:
     steps:
     - name: checkout release
       uses: actions/checkout@v4
+    - name: archive to tar.gz
+      working-directory: kafka-producer
+      run: |
+        cd kafka-producer
+        tar -czf ../../kafka-producer.tar.gz .
 
+'''
     - name: archive to tar.gz
       run: |
         cd kafka-producer       # ✅ kafka-producer 안으로 들어감
         tar -czf ../kafka-producer.tar.gz .   # ✅ 내부 파일만 압축 (겉폴더 제거)
-
+'''
     - name: AWS configure credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
