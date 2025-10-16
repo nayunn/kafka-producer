@@ -23,7 +23,9 @@ jobs:
     - name: archive to tar.gz
       run: |
         cd kafka-producer
-        tar -czf ../../kafka-producer.tar.gz .
+        # appspec.yml + producers 디렉토리만 포함 (루트 구조 유지)
+        tar czf ../kafka-producer.tar.gz appspec.yml producers
+    
 
     - name: AWS configure credentials
       # aws 접속시 필요한 키 셋팅하는 사전 정의된 action 사용
@@ -34,7 +36,9 @@ jobs:
         aws-region: ap-northeast-2
 
     - name: upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./kafka-producer.tar.gz s3://datalake-actions-deploy/kafka-producer/kafka-producer.tar.gz
+      run: |
+        aws s3 cp --region ap-northeast-2 ../kafka-producer.tar.gz \
+        s3://datalake-actions-deploy-nayun/kafka-producer/kafka-producer.tar.gz
 
     - name: deploy with AWS codeDeploy
       run: aws deploy create-deployment
