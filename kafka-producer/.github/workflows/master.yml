@@ -22,9 +22,8 @@ jobs:
 
     - name: archive to tar.gz
       run: |
-        cd kafka-producer
-        # appspec.yml + producers 디렉토리만 포함 (루트 구조 유지)
-        tar czf ../kafka-producer.tar.gz appspec.yml producers
+        # kafka-producer 안의 파일을 루트 바로 아래에 압축
+        tar -czf kafka-producer.tar.gz -C kafka-producer appspec.yml producers
     
 
     - name: AWS configure credentials
