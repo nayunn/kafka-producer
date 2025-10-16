@@ -31,9 +31,10 @@ jobs:
 
     - name: deploy with AWS CodeDeploy
       run: |
-        # ✅ 여러 줄 명령은 YAML 문법상 `|` 로 감싸야 함 gg
+        # ✅ 여러 줄 명령은 YAML 문법상 `|` 로 감싸야 함
         aws deploy create-deployment \
           --application-name datalake-deploy \
           --deployment-group-name kafka-deploy \
           --s3-location bucket=datalake-actions-deploy-nayun,key=kafka-producer/kafka-producer.tar.gz,bundleType=tgz \
           --region ap-northeast-2
+#제발제랍라자!
