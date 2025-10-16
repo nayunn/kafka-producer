@@ -37,4 +37,3 @@ jobs:
           --deployment-group-name kafka-deploy \
           --s3-location bucket=datalake-actions-deploy-nayun,key=kafka-producer/kafka-producer.tar.gz,bundleType=tgz \
           --region ap-northeast-2
-#제발제랍라자!
