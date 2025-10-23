@@ -21,7 +21,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: archive to tar.gz
-      run: tar cvfz ./kafka-producer.tar.gz * #수정 run: tar cvfz ./kafka-producer.tar.gz ./* (원본)
+      run: tar cvfz ./kafka-producer.tar.gz * #수정 -  run: tar cvfz ./kafka-producer.tar.gz ./* (원본)
 
     - name: AWS configure credentials
       # aws 접속시 필요한 키 셋팅하는 사전 정의된 action 사용
